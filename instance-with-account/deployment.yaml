@@ -1,0 +1,16 @@
+imports:
+  - path: service_account.jinja
+  - path: iam_policy.jinja
+  - path: instance.jinja
+
+resources:
+  - name: svc-account
+    type: service_account.jinja
+
+  - name: iam-policy
+    type: iam_policy.jinja
+
+  - name: compute-instance
+    type: instance.jinja
+    properties:
+      zone: europe-west2-a

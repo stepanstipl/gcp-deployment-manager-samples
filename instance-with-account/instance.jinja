@@ -1,0 +1,25 @@
+resources:
+- type: gcp-types/compute-v1:instances
+  name: compute-instance
+  properties:
+    name: {{ env["deployment"] }}-primary
+    machineType: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/machineTypes/f1-micro
+    zone: {{ properties["zone"] }}
+    disks:
+      - deviceName: boot
+        boot: true
+        type: PERSISTENT
+        autoDelete: true
+        mode: READ_WRITE
+        initializeParams:
+          diskName: {{ env["deployment"] }}-primary-boot
+          sourceImage: https://www.googleapis.com/compute/v1/projects/gce-uefi-images/global/images/family/ubuntu-1804-lts
+    networkInterfaces:
+      - network: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/global/networks/default
+        accessConfigs:
+        - name: External NAT
+          type: ONE_TO_ONE_NAT
+    serviceAccounts:
+    - email: $(ref.svc-account.email)
+      scopes:
+        - https://www.googleapis.com/auth/cloud-platform
